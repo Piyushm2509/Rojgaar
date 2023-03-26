@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Write a Review</title>
+  <style>
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    select {
+      width: 100%;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Write a Review</h1>
+    <form id="reviewForm">
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+          <option value="">Select a rating</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="review">Review:</label>
+        <textarea id="review" name="review" rows="5" required></textarea>
+      </div>
+      <button type="submit">Submit Review</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('reviewForm');
+const name = document.getElementById('name');
+const email = document.getElementById('email');
+const rating = document.getElementById('rating');
+const review = document.getElementById('review');
+const message = document.getElementById('message');
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  if (validateForm()) {
+    submitReview();
+  }
+});
+
+function validateForm() {
+  let isValid = true;
+  if (name.value.trim() === '') {
+    setErrorFor(name, 'Name is required');
+    isValid = false;
+  } else {
+    setSuccessFor(name);
+  }
+
+  if (email.value.trim() === '') {
+    setErrorFor(email, 'Email is required');
+    isValid = false;
+  } else if (!isEmailValid(email.value.trim())) {
+    setErrorFor(email, 'Email is invalid');
+    isValid = false;
+  } else {
+    setSuccessFor(email);
+  }
+
+  if (rating.value === '') {
+    setErrorFor(rating, 'Rating is required');
+    isValid = false;
+  } else {
+    setSuccessFor(rating);
+  }
+
+  if (review.value.trim() === '') {
+    setErrorFor(review, 'Review is required');
+    isValid = false;
+  } else {
+    setSuccessFor(review);
+  }
+
+  return isValid;
+}
+
+function setErrorFor(input, message) {
+  const formGroup = input.parentElement;
+  const error = formGroup.querySelector('.error');
+  input.classList.add('invalid');
+  error.innerText = message;
+  error.style.display = 'block';
+}
+
+function setSuccessFor(input) {
+  const formGroup = input.parentElement;
+  const error = formGroup.querySelector('.error');
+  input.classList.remove('invalid');
+  error.innerText = '';
+  error.style.display = 'none';
+}
+
+function isEmailValid(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function submitReview() {
+  const xhr = new XMLHttpRequest();
+  const formData = new FormData(form);
+  xhr.open('POST', 'submit_review.php');
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      if (xhr.status === 200) {
+        message.innerHTML = '<p class="success">Review submitted successfully!</p>';
+        form.reset();
+      } else {
+        message.innerHTML = '<p class="error">Error submitting review. Please try again later.</p>';
+      }
+    }
+  };
+  xhr.send(formData);
+}
+
+  </script>

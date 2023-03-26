@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Post a Job Opening</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    input[type="submit"] {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Post a Job Opening</h1>
+  <form id="jobForm">
+    <label for="title">Job Title:</label>
+    <input type="text" id="title" name="title" required>
+    <label for="company">Company:</label>
+    <input type="text" id="company" name="company" required>
+    <label for="description">Job Description:</label>
+    <textarea id="description" name="description" rows="5" required></textarea>
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required>
+    <label for="salary">Salary:</label>
+    <input type="number" id="salary" name="salary" required>
+    <input type="submit" value="Post Job">
+  </form>
+  <script>
+    const form = document.getElementById('jobForm');
+    const title = document.getElementById('title');
+    const company = document.getElementById('company');
+    const description = document.getElementById('description');
+    const location = document.getElementById('location');
+    const salary = document.getElementById('salary');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (validateForm()) {
+        postJob();
+      }
+    });
+
+    function validateForm() {
+      let valid = true;
+      clearErrors();
+      if (title.value === '') {
+        setErrorFor(title, 'Job title is required');
+        valid = false;
+      }
+      if (company.value === '') {
+        setErrorFor(company, 'Company name is required');
+        valid = false;
+      }
+      if (description.value === '') {
+        setErrorFor(description, 'Job description is required');
+        valid = false;
+      }
+      if (location.value === '') {
+        setErrorFor(location, 'Location is required');
+        valid = false;
+      }
+      if (salary.value === '') {
+        setErrorFor(salary,'Salary is required');
+        valid = false;
+      }
+    }
